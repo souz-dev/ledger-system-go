@@ -46,6 +46,10 @@ func (t *Transaction) Validate() error {
 			return ErrInvalidEntryAmount
 		}
 
+		if !entry.Direction.IsValid() {
+			return ErrInvalidDirection
+		}
+
 		switch entry.Direction {
 		case Debit:
 			debitTotal += entry.Amount
