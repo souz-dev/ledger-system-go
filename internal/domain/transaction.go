@@ -1,6 +1,9 @@
 package domain
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
 var (
 	ErrTransactionWithoutEntries = errors.New("transaction must have at least one entry")
@@ -9,9 +12,10 @@ var (
 )
 
 type Transaction struct {
-	ID      string
-	Name    string
-	Entries []Entry
+	ID        string
+	Name      string
+	Entries   []Entry
+	CreatedAt time.Time
 }
 
 func (t *Transaction) Validate() error {
