@@ -18,6 +18,21 @@ type Transaction struct {
 	CreatedAt time.Time
 }
 
+func NewTransaction(id, name string, entries []Entry, createdAt time.Time) (*Transaction, error) {
+	transaction := &Transaction{
+		ID:        id,
+		Name:      name,
+		Entries:   entries,
+		CreatedAt: createdAt,
+	}
+
+	if err := transaction.Validate(); err != nil {
+		return nil, err
+	}
+
+	return transaction, nil
+}
+
 func (t *Transaction) Validate() error {
 	if len(t.Entries) == 0 {
 		return ErrTransactionWithoutEntries
