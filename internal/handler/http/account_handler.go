@@ -28,10 +28,15 @@ type createAccountRequest struct {
 }
 
 func (h *AccountHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		writeError(w, http.StatusMethodNotAllowed, "method not allowed")
+		return
+	}
+
 	var req createAccountRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "invalid request body", http.StatusBadRequest)
+		writeError(w, http.StatusBadRequest, "invalid request body")
 		return
 	}
 
@@ -43,31 +48,31 @@ func (h *AccountHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		time.Now(),
 	)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		writeError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	if err := h.ledgerService.CreateAccount(account); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(account)
+	writeJSON(w, http.StatusCreated, account)
 }
 
 func (h *AccountHandler) GetAccountByID(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		writeError(w, http.StatusMethodNotAllowed, "method not allowed")
+		return
+	}
+
 	id := strings.TrimPrefix(r.URL.Path, "/accounts/")
 
 	account, err := h.ledgerService.GetAccountByID(id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		writeError(w, http.StatusNotFound, err.Error())
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	json.NewEncoder(w).Encode(account)
+	writeJSON(w, http.StatusOK, account)
 }
