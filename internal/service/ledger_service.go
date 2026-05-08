@@ -24,12 +24,17 @@ func NewLedgerService(
 	}
 }
 
-func (s *LedgerService) CreateTransaction(transaction *domain.Transaction) error {
+func (s *LedgerService) CreateTransaction(transaction *domain.Transaction) (*domain.Transaction, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	existingTransaction, err := s.transactionRepo.FindByID(transaction.ID)
+	if err == nil {
+		return existingTransaction, nil
+	}
+
 	if err := transaction.Validate(); err != nil {
-		return err
+		return nil, err
 	}
 
 	accounts := make(map[string]*domain.Account)
@@ -37,7 +42,7 @@ func (s *LedgerService) CreateTransaction(transaction *domain.Transaction) error
 	for _, entry := range transaction.Entries {
 		account, err := s.accountRepo.FindByID(entry.AccountID)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		accounts[entry.AccountID] = account
@@ -48,15 +53,15 @@ func (s *LedgerService) CreateTransaction(transaction *domain.Transaction) error
 		account.Apply(entry)
 
 		if err := s.accountRepo.Update(account); err != nil {
-			return err
+			return nil, err
 		}
 	}
 
 	if err := s.transactionRepo.Create(transaction); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return transaction, nil
 }
 
 func (s *LedgerService) CreateAccount(account *domain.Account) error {

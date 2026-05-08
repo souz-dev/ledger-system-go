@@ -54,7 +54,7 @@ func TestLedgerServiceCreateTransaction(t *testing.T) {
 		t.Fatalf("expected no error, got %v", err)
 	}
 
-	if err := ledgerService.CreateTransaction(transaction); err != nil {
+	if _, err := ledgerService.CreateTransaction(transaction); err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}
 

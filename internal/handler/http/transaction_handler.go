@@ -69,12 +69,12 @@ func (h *TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	if err := h.ledgerService.CreateTransaction(transaction); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	createdTransaction, err := h.ledgerService.CreateTransaction(transaction)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(transaction)
+	writeJSON(w, http.StatusCreated, createdTransaction)
+
 }
