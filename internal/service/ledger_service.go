@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"sync"
 
 	"github.com/souz-dev/edger-system-go/internal/domain"
@@ -56,4 +57,18 @@ func (s *LedgerService) CreateTransaction(transaction *domain.Transaction) error
 	}
 
 	return nil
+}
+
+func (s *LedgerService) CreateAccount(account *domain.Account) error {
+	if account == nil {
+		return ErrNilAccount
+	}
+
+	return s.accountRepo.Create(account)
+}
+
+var ErrNilAccount = errors.New("account cannot be nil")
+
+func (s *LedgerService) GetAccountByID(id string) (*domain.Account, error) {
+	return s.accountRepo.FindByID(id)
 }
