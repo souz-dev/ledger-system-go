@@ -33,7 +33,7 @@ internal/repository/memory   # In-memory repository implementations
 internal/handler/http        # HTTP handlers (API layer)
 ```
 
-## How to Run
+## How to Run (Locally)
 
 ```sh
 go run cmd/api/main.go
@@ -41,6 +41,19 @@ go run cmd/api/main.go
 
 Server runs at:  
 http://localhost:5000
+
+## How to Run with Docker
+
+Build and run the application using Docker Compose:
+
+```sh
+docker compose up --build
+```
+
+The API will be available at:
+http://localhost:5000
+
+> **Note:** Ensure Docker is installed and the Docker daemon is running. In WSL2, start Docker Desktop on Windows.
 
 ## How to Test
 

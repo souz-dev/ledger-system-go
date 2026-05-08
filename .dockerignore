@@ -1,0 +1,40 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Vendor
+/vendor/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Node/npm (caso use para front ou mocks)
+node_modules/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Test/cache
+coverage*
+*.log
+*.tmp
+
+# System
+.DS_Store
+Thumbs.db
