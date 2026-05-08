@@ -1,6 +1,10 @@
 package domain
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Account struct {
 	ID        string    `json:"id"`
@@ -14,7 +18,9 @@ func NewAccount(id, name string, direction Direction, initialBalance int64, crea
 	if !direction.IsValid() {
 		return nil, ErrInvalidDirection
 	}
-
+	if id == "" {
+		id = uuid.NewString()
+	}
 	return &Account{
 		ID:        id,
 		Name:      name,

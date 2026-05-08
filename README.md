@@ -21,6 +21,7 @@ A simple double-entry accounting ledger API built with Go.
   - Same direction as account: increase balance
   - Different direction: decrease balance
 - Money values are represented as int64 in cents (no floats).
+- **If the `id` field is omitted or empty when creating an account, entry, or transaction, a UUID will be generated automatically.**
 
 ## Architecture
 
@@ -67,12 +68,12 @@ go test ./...
 ```sh
 curl -X POST http://localhost:5000/accounts \
   -H "Content-Type: application/json" \
-  -d '{"id":"acc-1","name":"Cash","direction":"debit","balance":0}'
+  -d '{"name":"Cash","direction":"debit","balance":0}'
 ```
 
 ### Get Account
 ```sh
-curl http://localhost:5000/accounts/acc-1
+curl http://localhost:5000/accounts/<ID_DA_CONTA>
 ```
 
 ### Create Transaction
@@ -80,18 +81,15 @@ curl http://localhost:5000/accounts/acc-1
 curl -X POST http://localhost:5000/transactions \
   -H "Content-Type: application/json" \
   -d '{
-    "id":"tx-1",
     "name":"Initial movement",
     "entries":[
       {
-        "id":"entry-1",
-        "account_id":"acc-1",
+        "account_id":"<ID_DA_CONTA_DEBIT>",
         "direction":"debit",
         "amount":100
       },
       {
-        "id":"entry-2",
-        "account_id":"acc-2",
+        "account_id":"<ID_DA_CONTA_CREDIT>",
         "direction":"credit",
         "amount":100
       }
@@ -101,5 +99,5 @@ curl -X POST http://localhost:5000/transactions \
 
 ### Get Transaction
 ```sh
-curl http://localhost:5000/transactions/tx-1
+curl http://localhost:5000/transactions/<ID_DA_TRANSACAO>
 ```

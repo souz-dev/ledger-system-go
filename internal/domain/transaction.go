@@ -3,6 +3,8 @@ package domain
 import (
 	"errors"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 var (
@@ -19,6 +21,9 @@ type Transaction struct {
 }
 
 func NewTransaction(id, name string, entries []Entry, createdAt time.Time) (*Transaction, error) {
+	if id == "" {
+		id = uuid.NewString()
+	}
 	transaction := &Transaction{
 		ID:        id,
 		Name:      name,

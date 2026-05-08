@@ -1,6 +1,10 @@
 package domain
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Entry struct {
 	ID        string
@@ -17,6 +21,10 @@ func NewEntry(id, accountID string, direction Direction, amount int64, createdAt
 
 	if amount <= 0 {
 		return Entry{}, ErrInvalidEntryAmount
+	}
+
+	if id == "" {
+		id = uuid.NewString()
 	}
 
 	return Entry{
